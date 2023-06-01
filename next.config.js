@@ -3,13 +3,13 @@ const nextConfig = {
     env: {
         ACCESS_TOKEN: process.env.ACCESS_TOKEN,
         SECRET_KEY: process.env.SECRET_KEY,
-        API_KEY: "AIzaSyAQTvgAqMsn39YnI7GR8WX78FLgUwMZE8E",
-        AUTH_DOMAIN: "kate-app-53aa1.firebaseapp.com",
-        PROJECT_ID: "kate-app-53aa1",
-        STORAGE_BUCKET: "kate-app-53aa1.appspot.com",
-        MESSAGING_SENDER: "942777086211",
-        APP_ID: "1:942777086211:web:9d36ffe2eb655328cef936",
-        MEASUREMENT_ID: "G-9SHP7Y3NKJ"
+        API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+        AUTH_DOMAIN: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+        PROJECT_ID: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+        STORAGE_BUCKET: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+        MESSAGING_SENDER: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER,
+        APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+        MEASUREMENT_ID: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
     },
     images: {
         domains: ['thinkbeyondbook.com']

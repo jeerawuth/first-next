@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className="text-5xl flex col-auto justify-center text-red-500">
       <AuthProvider>
-        <div className="flex flex-col">
+        <div className="container">
           <MainNav />
           <Profile />
         </div>

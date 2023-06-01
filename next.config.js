@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    swcMinify: true,
     env: {
         ACCESS_TOKEN: process.env.ACCESS_TOKEN,
         SECRET_KEY: process.env.SECRET_KEY,

@@ -5,7 +5,7 @@ import { auth } from '@/app/db/firebase';
 import Spinner from '../Spinner';
 
 const LoginForm = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -41,7 +41,6 @@ const LoginForm = () => {
       setError('');
       try {
         await signInWithEmailAndPassword(auth, email, password);
-        console.log('login successful!')
         setEmail('');
         setPassword('');
         setIsOpen(false);

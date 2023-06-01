@@ -1,9 +1,11 @@
 "use client"
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import {app} from '@/app/db/firebase';
 import { auth } from '@/app/db/firebase';
 import { useRouter } from 'next/navigation';
 import Spinner from '../Spinner';
+import User from '@/app/db/models/User';
 
 const RegisterForm = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -62,6 +64,19 @@ const RegisterForm = () => {
         // setDisplayName('');
         // setEmail('');
         // setPassword('');
+        // Store additional profile data in Firestore
+        const userObj = new User(app);
+        await userObj.createUser({
+          uid: user.uid,
+          email: user.email,
+          displayName: currentDisplayName,
+        });
+
+        // await addDoc(collection(db, "users"), {
+        //   uid: user.uid,
+        //   email: user.email,
+        //   displayName: currentDisplayName,
+        // });
         setIsOpen(false);
         setLoading(false);
         router.push('/');   // user.displayName ไม่อัปเดต ดังนั้นจึงต้องโหลดหน้าเว็บเพจใหม่ก่อน

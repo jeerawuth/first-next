@@ -1,6 +1,6 @@
 import { AuthProvider } from "./providers/authContext";
-import Profile from "./components/Profile";
 import MainNav from "./components/MainNav";
+import MyData from "./components/MyData";
 
 export default function Home() {
   return (
@@ -8,7 +8,7 @@ export default function Home() {
       <AuthProvider>
         <div className="container">
           <MainNav />
-          <Profile />
+          <MyData />
         </div>
       </AuthProvider>
     </div>

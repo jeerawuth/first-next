@@ -1,5 +1,5 @@
 import { 
-  getFirestore, doc, getDoc, addDoc, updateDoc, deleteDoc, collection, getDocs, query, where 
+  getFirestore, doc, getDoc, addDoc, setDoc, updateDoc, deleteDoc, collection, getDocs, query, where 
 } from 'firebase/firestore';
 
 class FirebaseService {
@@ -50,6 +50,19 @@ class FirebaseService {
     const querySnapshot = await getDocs(q);
     const documents = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     return documents;
+  }
+
+  // Get single document by field
+  async getDocumentByField(collectionPath, field, operator, value) {
+    const q = query(collection(this.db, collectionPath), where(field, operator, value));
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      // Return the first matching document
+      const document = querySnapshot.docs[0];
+      return { id: document.id, ...document.data() };
+    } else {
+      throw new Error(`No document matches the condition: ${field} ${operator} ${value}`);
+    }
   }
 }
 

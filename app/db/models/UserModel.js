@@ -1,6 +1,6 @@
 import FirebaseService from '../FirebaseService';
 
-class User extends FirebaseService {
+class UserModel extends FirebaseService {
   constructor(firebaseApp) {
     super(firebaseApp);
     this.collectionPath = 'users';
@@ -14,6 +14,10 @@ class User extends FirebaseService {
   // Get a user
   async getUser(documentId) {
     return super.getDocument(this.collectionPath, documentId);
+  }
+  
+  async getUserByUID(uid) {
+    return super.getDocumentByField(this.collectionPath, 'uid', '==', uid);
   }
 
   // Update a user
@@ -37,7 +41,7 @@ class User extends FirebaseService {
   }
 }
 
-export default User;
+export default UserModel;
 
 
 

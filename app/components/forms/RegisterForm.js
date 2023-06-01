@@ -1,11 +1,11 @@
 "use client"
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import {app} from '@/app/db/firebase';
+import { app } from '@/app/db/firebase';
 import { auth } from '@/app/db/firebase';
-import { useRouter } from 'next/navigation';
 import Spinner from '../Spinner';
-import User from '@/app/db/models/User';
+import UserModel from '@/app/db/models/UserModel';
+import { useAuth } from '@/app/providers/authContext';
 
 const RegisterForm = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,8 +13,8 @@ const RegisterForm = () => {
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const { user, loading } = useAuth();
 
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => {
@@ -54,36 +54,27 @@ const RegisterForm = () => {
     if (error) {
       setError(error);
     } else {
-      setLoading(true);
+      setIsLoading(true);
       setError('');
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
+        // check displayName if empty use first path of email
         const currentDisplayName = displayName.trim().length !== 0 ? displayName:  `${splitNameFromEmail(email)}`;
         await updateProfile(user, { displayName: currentDisplayName });
-        // setDisplayName('');
-        // setEmail('');
-        // setPassword('');
         // Store additional profile data in Firestore
-        const userObj = new User(app);
+        const userObj = new UserModel(app);
         await userObj.createUser({
           uid: user.uid,
           email: user.email,
           displayName: currentDisplayName,
         });
-
-        // await addDoc(collection(db, "users"), {
-        //   uid: user.uid,
-        //   email: user.email,
-        //   displayName: currentDisplayName,
-        // });
         setIsOpen(false);
-        setLoading(false);
-        router.push('/');   // user.displayName ไม่อัปเดต ดังนั้นจึงต้องโหลดหน้าเว็บเพจใหม่ก่อน
+        setIsLoading(false);
       } catch (error) {
         console.error(error);
         setError(error.message);
-        setLoading(false);
+        setIsLoading(false);
       }
     }
   };
@@ -100,7 +91,7 @@ const RegisterForm = () => {
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">Register</h3>
                 {error && <p className="text-red-500">{error}</p>}
-                { !loading && (
+                { !isLoading && (
                 <div className="mt-2">
                   <input 
                     className="mt-5 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
@@ -128,7 +119,7 @@ const RegisterForm = () => {
                   />
                 </div>
                 )}
-                { loading && <Spinner /> }
+                { isLoading && <Spinner /> }
               </div>
               <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <button 

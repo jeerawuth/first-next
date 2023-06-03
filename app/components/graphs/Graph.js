@@ -1,5 +1,5 @@
 "use client"
-import { app } from "../db/firebase";
+import { app } from "../../db/firebase";
 import { Line } from 'react-chartjs-2';
 import React, { useEffect, useState } from 'react';
 import {

@@ -1,7 +1,7 @@
 import { AuthProvider } from "./providers/authContext";
 import MainNav from "./components/MainNav";
-import MyData from "./components/MyData";
-import Graph from "./components/Graph";
+import SampleData from "./components/SampleData";
+import GraphDaily from "./components/GraphDaily";
 
 export default function Home() {
   return (
@@ -9,8 +9,8 @@ export default function Home() {
       <AuthProvider>
         <div className="container">
           <MainNav />
-          <MyData />
-          <Graph />
+          <SampleData />
+          <GraphDaily />
         </div>
       </AuthProvider>
     </div>

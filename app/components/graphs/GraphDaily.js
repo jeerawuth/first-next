@@ -1,6 +1,8 @@
 "use client"
 import { Line } from 'react-chartjs-2';
 import React, { useEffect, useState } from 'react';
+import { useAuth } from '@/app/providers/authContext';
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,7 +14,9 @@ import {
   Legend,
 } from 'chart.js';
 import { getFirestore, doc, Timestamp, onSnapshot } from 'firebase/firestore';
-import { app } from "../db/firebase";
+import { app } from "../../db/firebase";
+import { timeDisplayHourly } from './graphHelpers/time';
+import Spinner from '../Spinner';
 const db = getFirestore(app);
 
 ChartJS.register(
@@ -38,14 +42,10 @@ const options = {
   },
 };
 
-const timeRanges = {
-  'Daily': 'hours',
-  'Weekly': 'days',
-  'Monthly': 'months',
-  'Yearly': 'years',
-};
-
 export default function GraphDaily() {
+  const { user , loading } = useAuth();
+  const [ error , setError]  = useState(null);
+
   const [data, setData] = useState({
     labels: [],
     datasets: [
@@ -58,81 +58,59 @@ export default function GraphDaily() {
     ],
   });
 
-  const [timeRange, setTimeRange] = useState('Daily');
-
   useEffect(() => {
-    const now = new Date();
-    const startDate = new Date();
-
-    switch (timeRange) {
-      case 'Daily':
-        startDate.setTime(now.getTime() - 24 * 60 * 60 * 1000); // 24 hours ago
-        break;
-      case 'Weekly':
-        startDate.setTime(now.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 days ago
-        break;
-      case 'Monthly':
-        startDate.setMonth(now.getMonth() - 1); // 1 month ago
-        break;
-      case 'Yearly':
-        startDate.setFullYear(now.getFullYear() - 1); // 1 year ago
-        break;
-      default:
-        break;
-    }
-    const startTimestamp = Timestamp.fromDate(startDate);
-
     const date = Timestamp.now().toDate(); // Convert to JavaScript Date object
     const year = date.getFullYear();
     const month = date.getMonth() + 1; // JavaScript months are 0-indexed
     const day = date.getDate();
-
-    // const dataQuery = query(
-    //   collection(db, 'years', `${year}`, 'months', `${month}`, 'days', `${day}`, 'transactions'), 
-    //   where('date', '>=', startTimestamp), 
-    //   orderBy('date')
-    // );
-
     const docRef = doc(db, 'years', `${year}`, 'months', `${month}`, 'days', `${day}`)
-    // .where('date', '>=', startTimestamp)
-    // .orderBy('date');
 
     // Listen for changes
     const unsubscribe = onSnapshot(docRef, (doc) => {
         if (doc.exists()) {
-        const transactions = doc.data().transactions.filter(data => data.date >= startTimestamp)
-        const chartData = prepareChartData(transactions, timeRange);
+        const transactions = doc.data().transactions;
+        const chartData = prepareChartData(transactions);
         setData(chartData);
         } else {
         console.log("No such document!");
         }
+    }, (error) => {
+      // when have got error
+        setError(error.message);
     });
-    // const unsubscribe = onSnapshot(dataQuery, (snapshot) => {
-    //   const snapshotData = snapshot.docs.map(doc => ({ ...doc.data(), date: doc.data().date.toDate() }));
-    //   const chartData = prepareChartData(snapshotData, timeRange);
-    //   setData(chartData);
-    // });
+    if(user) {
+      setError(null)
+    }
     return () => unsubscribe();
-  }, [timeRange]);
+  }, [user]);
+
+
+
+  if(loading) {
+    return <Spinner />
+  } 
+  
 
   return (
+    <>
+    {error && <div>{error}</div>}
+    {user && (
     <div>
-      {Object.keys(timeRanges).map(range => (
-        <button key={range} onClick={() => setTimeRange(range)}>
-          {range}
-        </button>
-      ))}
       <Line options={options} data={data} />
     </div>
+    )}
+    </>
   );
+  
+
 }
 
-function prepareChartData(snapshotData, timeRange) {
+function prepareChartData(snapshotData) {
   // TODO: Implement logic to calculate averages and prepare data for chart
   // The exact implementation will depend on the specifics of your data and how you want to present it
   
   return {
-    labels: snapshotData.map(d => d.date),
+    labels: snapshotData.map(d => timeDisplayHourly(d.date)),
     datasets: [
       {
         label: 'Statistics',

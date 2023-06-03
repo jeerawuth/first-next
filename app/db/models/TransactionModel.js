@@ -24,13 +24,6 @@ class TransactionModel  {
       // Step 2: Manipulate the document data
       const data = docSnap.data();
       
-      // Add newValue to values
-      let values = data.values;
-      if (Array.isArray(values)) {
-        values.push(newValue);
-      } else {
-        values = [newValue];
-      }
       // Add newTransaction to transactions
       let transactions = data.transactions;
       
@@ -41,11 +34,11 @@ class TransactionModel  {
       }
       
       // Calculate the average of values
-      const averageValue = values.reduce((a, b) => a + b, 0) / values.length;
+
+      const averageValue = transactions.map((data) => data.value).reduce((a, b) => a + b, 0) / transactions.length;
 
       // Step 3: Write the document back
       await updateDoc(docRef, {
-        values: values,
         averageValue: averageValue,
         transactions: transactions
       });
@@ -55,7 +48,6 @@ class TransactionModel  {
       const dayDoc = doc(this.db, 'years', `${year}`, 'months', `${month}`, 'days', `${day}`);
       await setDoc(dayDoc, { 
         averageValue: newValue,
-        values: [newValue],
         transactions: [{value: newValue, date:now }]
       });
     }

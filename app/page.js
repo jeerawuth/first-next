@@ -1,7 +1,7 @@
 import { AuthProvider } from "./providers/authContext";
 import MainNav from "./components/MainNav";
 import SampleData from "./components/SampleData";
-import GraphDaily from "./components/GraphDaily";
+import GraphDaily from "./components/graphs/GraphDaily";
 
 export default function Home() {
   return (

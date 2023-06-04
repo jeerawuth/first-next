@@ -13,6 +13,13 @@ class FirebaseService {
     return docRef.id;
   }
 
+   // Create a new document with uid
+   async createDocumentWithId(collectionPath, data, uid) {
+    const docRef = doc(this.db, collectionPath, `${uid}`);
+    const userData = await setDoc(docRef, data);
+    return userData
+  }
+
   // Get a single document
   async getDocument(collectionPath, documentId) {
     const docRef = doc(this.db, collectionPath, documentId);

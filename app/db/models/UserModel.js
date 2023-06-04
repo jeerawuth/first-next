@@ -11,6 +11,11 @@ class UserModel extends FirebaseService {
     return super.createDocument(this.collectionPath, data);
   }
 
+  // Create a new user with specific uid
+  async createUserWithUid(data, uid) {
+    return super.createDocumentWithId(this.collectionPath, data, uid);
+  }
+
   // Get a user
   async getUser(documentId) {
     return super.getDocument(this.collectionPath, documentId);

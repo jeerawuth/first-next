@@ -5,7 +5,6 @@ import { app } from '@/app/db/firebase';
 import { auth } from '@/app/db/firebase';
 import Spinner from '../Spinner';
 import UserModel from '@/app/db/models/UserModel';
-import { useAuth } from '@/app/providers/authContext';
 
 const RegisterForm = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,7 +13,6 @@ const RegisterForm = () => {
   const [displayName, setDisplayName] = useState('');
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { user, loading } = useAuth();
 
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => {
@@ -64,11 +62,11 @@ const RegisterForm = () => {
         await updateProfile(user, { displayName: currentDisplayName });
         // Store additional profile data in Firestore
         const userObj = new UserModel(app);
-        await userObj.createUser({
+        await userObj.createUserWithUid({
           uid: user.uid,
           email: user.email,
           displayName: currentDisplayName,
-        });
+        }, user.uid);
         setIsOpen(false);
         setIsLoading(false);
       } catch (error) {

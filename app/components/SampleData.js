@@ -14,7 +14,7 @@ export default function SampleData() {
         setIsLoading(true);
         const data = Math.round(Math.random() * 10);
         const timestamp = Timestamp.now()
-        await transactionObj.addDataTransaction(data, timestamp, 'siteA', 'machineA', 'sensorA');
+        await transactionObj.addDataTransaction(data, timestamp, 'siteA', 'machineA', 'port0');
         setIsLoading(false);
     }
 

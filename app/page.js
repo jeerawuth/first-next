@@ -12,7 +12,10 @@ export default function Home() {
       <AuthProvider>
         <div className="container">
           <MainNav />
+          {/* <GraphDaily siteId={'siteA'} machineId={'machineA'} portNumber={'port0'} />
           <UserEditForm />
+          <SampleData  /> */}
+          <AddSensorForm siteId={'siteA'} machineId={'machineA'} portNumber={'port0'} sensorId={'serailxxx'} />
         </div>
       </AuthProvider>
     </div>

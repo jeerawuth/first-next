@@ -42,7 +42,7 @@ const options = {
   },
 };
 
-export default function GraphDaily({ siteId, machineId, sensorId }) {
+export default function GraphDaily({ siteId, machineId, portNumber }) {
   const { user , loading } = useAuth();
   const [ error , setError]  = useState(null);
 
@@ -63,7 +63,7 @@ export default function GraphDaily({ siteId, machineId, sensorId }) {
     const year = date.getFullYear();
     const month = date.getMonth() + 1; // JavaScript months are 0-indexed
     const day = date.getDate();
-    const docRef = doc(db, 'sites', `${siteId}`,'machines', `${machineId}`,'sensors', `${sensorId}`, 'years', `${year}`, 'months', `${month}`, 'days', `${day}`)
+    const docRef = doc(db, 'sites', `${siteId}`,'machines', `${machineId}`,'ports', `${portNumber}`, 'years', `${year}`, 'months', `${month}`, 'days', `${day}`)
 
     // Listen for changes
     const unsubscribe = onSnapshot(docRef, (doc) => {
@@ -82,7 +82,7 @@ export default function GraphDaily({ siteId, machineId, sensorId }) {
       setError(null)
     }
     return () => unsubscribe();
-  }, [user]);
+  }, [siteId, machineId, portNumber, user]);
 
 
 

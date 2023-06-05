@@ -7,14 +7,14 @@ class TransactionModel  {
     this.db = getFirestore(app);
   }
 
-  async addDataTransaction(newValue, timestamp, siteId, machineId, sensorId) {
+  async addDataTransaction(newValue, timestamp, siteId, machineId, portNumber) {
     const date = timestamp.toDate(); // Convert to JavaScript Date object
     const year = date.getFullYear();
     const month = date.getMonth() + 1; // JavaScript months are 0-indexed
     const day = date.getDate();
     const docRef = doc(
       this.db, 
-      'sites', `${siteId}`,'machines', `${machineId}`,'sensors', `${sensorId}`, 'years', `${year}`,'months', `${month}`, 'days', `${day}`
+      'sites', `${siteId}`,'machines', `${machineId}`,'ports', `${portNumber}`, 'years', `${year}`,'months', `${month}`, 'days', `${day}`
     );
     const now = Timestamp.now();
     // Step 1: Read the document
@@ -45,7 +45,7 @@ class TransactionModel  {
     } else {
       
       // Define a newValue in the 'days' subcollection
-      const dayDoc = doc(this.db, 'sites', `${siteId}`,'machines', `${machineId}`,'sensors', `${sensorId}`, 'years', `${year}`, 'months', `${month}`, 'days', `${day}`);
+      const dayDoc = doc(this.db, 'sites', `${siteId}`,'machines', `${machineId}`,'ports', `${portNumber}`, 'years', `${year}`, 'months', `${month}`, 'days', `${day}`);
       await setDoc(dayDoc, { 
         averageValue: newValue,
         transactions: [{value: newValue, date:now }]

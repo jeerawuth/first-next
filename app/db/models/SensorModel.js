@@ -7,14 +7,15 @@ class SensorModel  {
     this.db = getFirestore(app);
   }
 
-  async addSensorData(data, siteId, machineId, sensorId) {
+  async addSensorData(data, siteId, machineId, portNumber, sensorId) {
     const docRef = doc(
       this.db, 
-      'sites', `${siteId}`,'machines', `${machineId}`,'sensors', `${sensorId}`
+      'sites', `${siteId}`,'machines', `${machineId}`,'ports', `${portNumber}`
     );
     await setDoc(
         docRef, 
         { 
+            sensorId: sensorId, 
             sensorName: data.sensorName,
             sensorPort: data.sensorPort,
             sensorType: data.sensorType,
